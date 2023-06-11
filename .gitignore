@@ -1,0 +1,8 @@
+.idea/
+Assembly-CSharp.csproj
+Library/
+Logs/
+UserSettings/
+desktop.ini
+obj/
+skills-tree-module.sln
