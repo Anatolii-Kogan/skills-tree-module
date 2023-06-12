@@ -39,11 +39,15 @@ namespace Skills
             int index = 0;
             while (_baseNote.TryGetSubNoteByIndex(index, out SkillTreeNode firstGenerationSkill))
             {
-                firstGenerationSkill.TryForgetSkill();
+                if (firstGenerationSkill.State == SkillState.Learned)
+                {
+                    firstGenerationSkill.ForgetSkill();
+                }
+
                 index++;
             }
         }
-        
+
         /// <returns>base skill node</returns>
         /// <exception cref="NullReferenceException">base skill node not founded</exception>
         public SkillTreeNode LoadData()
@@ -91,7 +95,7 @@ namespace Skills
         public static SkillTreeNode InitSkillInfo(SkillData baseSkill)
         {
             Dictionary<SkillData, SkillTreeNode> skillNodes = new Dictionary<SkillData, SkillTreeNode>();
-            
+
             SkillTreeNode baseNode = new SkillTreeNode(baseSkill);
             skillNodes.Add(baseSkill, baseNode);
 
@@ -112,17 +116,6 @@ namespace Skills
             SetState(SkillState.Learned);
         }
 
-        public bool TryForgetSkill()
-        {
-            if (State == SkillState.Learned)
-            {
-                SetState(SkillState.Unlearned);
-                return true;
-            }
-
-            return false;
-        }
-
         public void ForgetSkill()
         {
             ValidateState(SkillState.Learned);
@@ -131,7 +124,7 @@ namespace Skills
 
         public bool TryGetSubNoteByIndex(int index, out SkillTreeNode subNote)
         {
-            if (index < _subNodes.Length )
+            if (index < _subNodes.Length)
             {
                 subNote = _subNodes[index];
                 return true;
@@ -166,7 +159,7 @@ namespace Skills
 
             SetState(newState);
         }
-        
+
         private void SetState(SkillState newState)
         {
             if (newState != State)
@@ -180,14 +173,14 @@ namespace Skills
                 {
                     _pointService.Reference.ReturnPoints(_data.Price);
                 }
-                
+
                 State = newState;
                 foreach (var subNode in _subNodes)
                 {
                     subNode.OnParentStateChanged();
                 }
 
-               _skillService.Reference.HandleSkillChanged(this);
+                _skillService.Reference.HandleSkillChanged(this);
             }
         }
 
@@ -209,21 +202,16 @@ namespace Skills
                     skillNodes.Add(subSkill, subNote);
                     subNote.InitSkillInfo(skillNodes);
                 }
-                this.AddSub(subNote);
-                subNote.AddParent(this);
+                
+                AddNote(ref _subNodes, subNote);
+                subNote.AddNote(ref subNote._parentNodes, this);
             }
         }
 
-        private void AddSub(SkillTreeNode subNote)
+        private void AddNote(ref SkillTreeNode[] nodes, SkillTreeNode newNode)
         {
-            Array.Resize(ref _subNodes, _subNodes.Length + 1);
-            _subNodes[^1] = subNote;
-        }
-
-        private void AddParent(SkillTreeNode parentNode)
-        {
-            Array.Resize(ref _parentNodes, _parentNodes.Length + 1);
-            _parentNodes[^1] = parentNode;
+            Array.Resize(ref nodes, nodes.Length + 1);
+            nodes[^1] = newNode;
         }
     }
 }
