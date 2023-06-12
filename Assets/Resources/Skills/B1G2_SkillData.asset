@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52f287338570ffc4ca022e2c5d91bd51, type: 3}
   m_Name: B1G2_SkillData
   m_EditorClassIdentifier: 
-  _skillID: B1G2
+  _isBase: 0
+  _skillID: Flight
   _price: 8
   _subSkills: []
