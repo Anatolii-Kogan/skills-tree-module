@@ -14,13 +14,16 @@ namespace Skills.UI
 
         private SkillTreeNode _currentNode;
         
-        private ServiceReference<SkillsService> _skillService;
+        private ServiceReference<SkillsService> _skillsService;
+        private ServiceReference<PointsService> _pointsService;
 
         protected override void InitInternal()
         {
             base.InitInternal();
-            _skillService.Reference.OnDataReload += SetNewData;
-            _skillService.Reference.OnSkillStateChanged += UpdateData;
+            _skillsService.Reference.OnDataReload += SetNewData;
+            _skillsService.Reference.OnSkillStateChanged += UpdateData;
+
+            _pointsService.Reference.OnAmountChanged += HandlePointsAmountChanged;
 
             _learnSkillButton.onClick.AddListener(LearnSkill);
             _forgetAllSkillsButton.onClick.AddListener(ForgetAllSkills);
@@ -53,13 +56,16 @@ namespace Skills.UI
 
         private void UpdateUI()
         {
-            _forgetAllSkillsButton.interactable = _skillService.Reference.IsAnySkillLearned();
-            _learnSkillButton.interactable = _currentNode != null &&  _currentNode.State == SkillState.Unlearned;
+            _forgetAllSkillsButton.interactable = _skillsService.Reference.IsAnySkillLearned();
+            
+            _learnSkillButton.interactable = _currentNode != null &&  _currentNode.State == SkillState.Unlearned && _pointsService.Reference.IsEnoughPoint(_currentNode.Price);
             _forgetSkillButton.interactable = _currentNode != null && _currentNode.State == SkillState.Learned;
         }
 
-        private void LearnSkill() => _currentNode.TryLearnSkill();
+        private void HandlePointsAmountChanged(int points, int totalPoints) => UpdateUI();
+
+        private void LearnSkill() => _currentNode.LearnSkill();
         private void ForgetSkill() => _currentNode.ForgetSkill();
-        private void ForgetAllSkills() => _skillService.Reference.ForgetAllSkills();
+        private void ForgetAllSkills() => _skillsService.Reference.ForgetAllSkills();
     }
 }

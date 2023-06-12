@@ -106,17 +106,10 @@ namespace Skills
             return baseNode;
         }
 
-        public bool TryLearnSkill()
+        public void LearnSkill()
         {
-            if (_pointService.Reference.IsEnoughPoint(Price))
-            {
-                ValidateState(SkillState.Unlearned);
-                SetState(SkillState.Learned);
-                
-                return true;
-            }
-
-            return false;
+            ValidateState(SkillState.Unlearned);
+            SetState(SkillState.Learned);
         }
 
         public bool TryForgetSkill()
