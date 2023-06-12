@@ -3,16 +3,17 @@ using UnityEngine;
 
 namespace Skills.Core
 {
-    public class BaseMainPresenter : MonoBehaviour, IMainPresenter
+    public class BaseMainPresenter : MonoBehaviour
     {
         private void Awake()
         {
-            Init();
+            ReferenceProvider.Register(this);
+            //Init();
         }
 
-        public void Init()
-        {
-            ReferenceProvider.Register(GetComponent<IMainPresenter>());
-        }
+        // public void Init()
+        // {
+        //     ReferenceProvider.Register(GetComponent<IMainPresenter>());
+        // }
     }
 }
