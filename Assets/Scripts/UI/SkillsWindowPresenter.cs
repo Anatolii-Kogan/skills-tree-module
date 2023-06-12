@@ -14,12 +14,12 @@ namespace Skills.UI
 
         private SkillTreeNode _currentNode;
         
-        private ServiceReference<SimpleGameService> _gameService;
         private ServiceReference<SkillsService> _skillService;
 
-        private void Start()
+        protected override void InitInternal()
         {
-            _gameService.Reference.OnDataLoaded += SetNewData;
+            base.InitInternal();
+            _skillService.Reference.OnDataLoaded += SetNewData;
             _skillService.Reference.OnSkillStateChanged += UpdateData;
 
             _learnSkillButton.onClick.AddListener(LearnSkill);

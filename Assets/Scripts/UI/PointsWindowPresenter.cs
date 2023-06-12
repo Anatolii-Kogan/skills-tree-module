@@ -5,16 +5,17 @@ using TMPro;
 
 namespace Skills.UI
 {
-    public class PointsWindowPresenter : MonoBehaviour
+    public class PointsWindowPresenter : BaseMainPresenter
     {
         [SerializeField] private TextMeshProUGUI _pointDisplayer;
         [SerializeField] private Button _addPoint;
         [SerializeField] private Button _add10Points;
 
         private ServiceReference<PointsService> _pointsService;
-        
-        private void Start()
+
+        protected override void InitInternal()
         {
+            base.InitInternal();
             _pointsService.Reference.OnAmountChanged += UpdatePointsInfo;
             
             _addPoint.onClick.AddListener(() => AddPoints(1));

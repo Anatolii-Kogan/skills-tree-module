@@ -7,6 +7,9 @@ namespace Skills.Core
         private void Awake()
         {
             ReferenceProvider.Register(this);
+            InitInternal();
         }
+
+        protected virtual void InitInternal() { }
     }
 }

@@ -12,26 +12,24 @@ namespace Skills
 
         private SkillTreeNode _baseNote;
 
-        private ServiceReference<SimpleGameService> _gameService;
-        
-        public SkillsModel()
-        {
-            LoadData();
-        }
+        private ServiceReference<SkillsService> _skillService;
 
         public bool IsAnySkillLearned
         {
             get
             {
-                int index = 0;
-                while (_baseNote.TryGetSubNoteByIndex(index, out SkillTreeNode firstGenerationSkill))
+                if (_baseNote != null)
                 {
-                    if (firstGenerationSkill.State == SkillState.Learned)
+                    int index = 0;
+                    while (_baseNote.TryGetSubNoteByIndex(index, out SkillTreeNode firstGenerationSkill))
                     {
-                        return true;
-                    }
+                        if (firstGenerationSkill.State == SkillState.Learned)
+                        {
+                            return true;
+                        }
 
-                    index++;
+                        index++;
+                    }
                 }
 
                 return false;
@@ -48,7 +46,7 @@ namespace Skills
             }
         }
 
-        private void LoadData()
+        public void LoadData()
         {
             SkillData[] skills = Resources.LoadAll<SkillData>(FilePath);
 
@@ -69,7 +67,7 @@ namespace Skills
 
             _baseNote = SkillTreeNode.InitSkillInfo(baseSkill);
             
-            _gameService.Reference.HandleDataLoaded(_baseNote);
+            _skillService.Reference.HandleDataLoaded(_baseNote);
         }
     }
 

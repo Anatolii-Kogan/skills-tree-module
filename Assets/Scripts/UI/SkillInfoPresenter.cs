@@ -8,8 +8,9 @@ namespace Skills.UI
     {
         [SerializeField] private TextMeshProUGUI _info;
 
-        private void Start()
+        protected override void InitInternal()
         {
+            base.InitInternal();
             _info.text = string.Empty;
         }
 
