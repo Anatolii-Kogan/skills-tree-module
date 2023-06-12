@@ -7,7 +7,7 @@ namespace Skills
     {
         private readonly SkillsModel _model;
 
-        public event Action<SkillTreeNode> OnDataLoaded;
+        public event Action<SkillTreeNode> OnDataReload;
         public event Action<SkillTreeNode> OnSkillStateChanged;
 
         public SkillsService()
@@ -17,11 +17,14 @@ namespace Skills
 
         public bool IsAnySkillLearned() => _model.IsAnySkillLearned;
 
-        public void ReloadData() => _model.LoadData();
-
         public void ForgetAllSkills() => _model.ForgetAllSkills();
 
+        public void ReloadData()
+        {
+            var baseSkillNode = _model.LoadData();
+            OnDataReload?.Invoke(baseSkillNode);
+        }
+
         public void HandleSkillChanged(SkillTreeNode changedSkill) => OnSkillStateChanged?.Invoke(changedSkill);
-        public void HandleDataLoaded(SkillTreeNode baseSkillNode) => OnDataLoaded?.Invoke(baseSkillNode);
     }
 }

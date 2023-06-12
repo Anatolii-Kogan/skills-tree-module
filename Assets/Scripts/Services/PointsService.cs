@@ -4,52 +4,39 @@ namespace Skills.Core
 {
     public class PointsService : ApplicationService
     {
-        private int _totalPoints;
-        private int _points;
+        private readonly PointsModel _model;
 
         /// <summary>
         /// 1st int - current points amount; 2nd int - total points amount
         /// </summary>
         public event Action<int, int> OnAmountChanged;
 
+        public PointsService()
+        {
+            _model = new PointsModel();
+        }
+
         public void AddPoints(int points)
         {
-            _totalPoints += points;
-            _points += points;
+            _model.AddPoints(points);
             
             HandleAmountChanged();
         }
 
         public void ReturnPoints(int points)
         {
-            _points += points;
+            _model.ReturnPoints(points);
             HandleAmountChanged();
         }
 
         public void SpendPoints(int points)
         {
-            _points -= points;
+            _model.SpendPoints(points);
             HandleAmountChanged();
         }
 
-        public bool IsEnoughPoint(int points) => _points >= points;
+        public bool IsEnoughPoint(int points) => _model.Points >= points;
 
-        private void HandleAmountChanged()
-        {
-            ValidatePoints();
-            OnAmountChanged?.Invoke(_points, _totalPoints);
-        }
-
-        private void ValidatePoints()
-        {
-            if (_points < 0 )
-            {
-                throw new ArgumentOutOfRangeException("There are unrecorded points!");
-            }
-            if (_points > _totalPoints)
-            {
-                throw new ArgumentOutOfRangeException($"Real total points amount and {nameof(_totalPoints)} are not equal!");
-            }
-        }
+        private void HandleAmountChanged() => OnAmountChanged?.Invoke(_model.Points, _model.TotalPoints);
     }
 }

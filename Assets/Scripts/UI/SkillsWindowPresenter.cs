@@ -19,7 +19,7 @@ namespace Skills.UI
         protected override void InitInternal()
         {
             base.InitInternal();
-            _skillService.Reference.OnDataLoaded += SetNewData;
+            _skillService.Reference.OnDataReload += SetNewData;
             _skillService.Reference.OnSkillStateChanged += UpdateData;
 
             _learnSkillButton.onClick.AddListener(LearnSkill);

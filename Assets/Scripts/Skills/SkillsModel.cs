@@ -12,8 +12,6 @@ namespace Skills
 
         private SkillTreeNode _baseNote;
 
-        private ServiceReference<SkillsService> _skillService;
-
         public bool IsAnySkillLearned
         {
             get
@@ -45,8 +43,10 @@ namespace Skills
                 index++;
             }
         }
-
-        public void LoadData()
+        
+        /// <returns>base skill node</returns>
+        /// <exception cref="NullReferenceException">base skill node not founded</exception>
+        public SkillTreeNode LoadData()
         {
             SkillData[] skills = Resources.LoadAll<SkillData>(FilePath);
 
@@ -66,8 +66,8 @@ namespace Skills
             }
 
             _baseNote = SkillTreeNode.InitSkillInfo(baseSkill);
-            
-            _skillService.Reference.HandleDataLoaded(_baseNote);
+
+            return _baseNote;
         }
     }
 
