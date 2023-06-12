@@ -20,7 +20,7 @@ namespace Skills.UI
         protected override void InitInternal()
         {
             base.InitInternal();
-            _skillsService.Reference.OnDataReload += SetNewData;
+            _skillsService.Reference.OnDataReload += _baseSkillButton.InitSkill;
             _skillsService.Reference.OnSkillStateChanged += UpdateData;
 
             _pointsService.Reference.OnAmountChanged += HandlePointsAmountChanged;
@@ -36,11 +36,6 @@ namespace Skills.UI
         {
             _currentNode = skill;
             UpdateUI();
-        }
-        
-        private void SetNewData(SkillTreeNode baseSkillNode)
-        {
-            _baseSkillButton.InitSkill(baseSkillNode);
         }
 
         private void UpdateData(SkillTreeNode changedSkillNode)

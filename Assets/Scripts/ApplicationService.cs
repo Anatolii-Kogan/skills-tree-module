@@ -1,6 +1,6 @@
 namespace Skills.Core
 {
-    public class ApplicationService
+    public abstract class ApplicationService
     {
         protected ApplicationService()
         {
