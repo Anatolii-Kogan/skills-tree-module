@@ -14,10 +14,13 @@ namespace Skills.UI
 
         private SkillTreeNode _skillNode;
 
-        private void Awake()
+        private PresenterReference<SkillsWindowPresenter> _skillsWindow;
+        private PresenterReference<SkillInfoPresenter> _skillInfo;
+
+        private void Start()
         {
             _button.onClick.AddListener(HandleClick);
-            
+
             UpdateState();
         }
 
@@ -72,10 +75,10 @@ namespace Skills.UI
 
         private void HandleClick()
         {
-            ReferenceProvider.GetReference<SkillInfoPresenter>().SetInfo(_skillNode);
+            _skillInfo.Reference.SetInfo(_skillNode);
             if (_skillNode.State != SkillState.CantBeLearned)
             {
-                ReferenceProvider.GetReference<SkillsWindowPresenter>().SetSkill(_skillNode);
+                _skillsWindow.Reference.SetSkill(_skillNode);
             }
         }
 

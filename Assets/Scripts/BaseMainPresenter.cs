@@ -10,6 +10,9 @@ namespace Skills.Core
             InitInternal();
         }
 
+        /// <summary>
+        /// Calls in Awake
+        /// </summary>
         protected virtual void InitInternal() { }
     }
 }
