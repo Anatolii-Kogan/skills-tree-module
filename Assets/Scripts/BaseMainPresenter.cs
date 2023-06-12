@@ -1,4 +1,3 @@
-using Skills.UI;
 using UnityEngine;
 
 namespace Skills.Core
@@ -8,12 +7,6 @@ namespace Skills.Core
         private void Awake()
         {
             ReferenceProvider.Register(this);
-            //Init();
         }
-
-        // public void Init()
-        // {
-        //     ReferenceProvider.Register(GetComponent<IMainPresenter>());
-        // }
     }
 }

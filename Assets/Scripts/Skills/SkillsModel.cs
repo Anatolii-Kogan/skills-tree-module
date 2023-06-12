@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Skills.Core;
 using UnityEngine;
 using Skills.Data;
-using Skills.UI;
 
 namespace Skills
 {
