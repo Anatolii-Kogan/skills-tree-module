@@ -15,7 +15,6 @@ namespace Skills.Core
             }
 
             Type type = reference.GetType();
-
             if (_map.ContainsKey(type))
             {
                 _map.Remove(type);

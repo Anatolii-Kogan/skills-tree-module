@@ -11,12 +11,11 @@ namespace Skills.UI
         [SerializeField] private Button _addPoint;
         [SerializeField] private Button _add10Points;
 
-        private PointsService _pointsService;
+        private ServiceReference<PointsService> _pointsService;
         
         private void Start()
         {
-            _pointsService = ReferenceProvider.GetWithGeneration<PointsService>();
-            _pointsService.OnAmountChanged += UpdatePointsInfo;
+            _pointsService.Reference.OnAmountChanged += UpdatePointsInfo;
             
             _addPoint.onClick.AddListener(() => AddPoints(1));
             _add10Points.onClick.AddListener(() => AddPoints(10));
@@ -24,7 +23,7 @@ namespace Skills.UI
             UpdatePointsInfo(0, 0);
         }
 
-        private void AddPoints(int points) => _pointsService.AddPoints(points);
+        private void AddPoints(int points) => _pointsService.Reference.AddPoints(points);
 
         private void UpdatePointsInfo(int points, int totalPoints) => _pointDisplayer.text = $"{points}/{totalPoints}";
     }

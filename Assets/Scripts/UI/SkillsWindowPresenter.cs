@@ -13,11 +13,14 @@ namespace Skills.UI
         [SerializeField] private Button _forgetSkillButton;
 
         private SkillTreeNode _currentNode;
+        
+        private ServiceReference<SimpleGameService> _gameService;
+        private ServiceReference<SkillsService> _skillService;
 
         private void Start()
         {
-            ReferenceProvider.GetWithGeneration<SimpleGameService>().OnDataLoaded += SetNewData;
-            ReferenceProvider.GetWithGeneration<SkillsService>().OnSkillStateChanged += UpdateData;
+            _gameService.Reference.OnDataLoaded += SetNewData;
+            _skillService.Reference.OnSkillStateChanged += UpdateData;
 
             _learnSkillButton.onClick.AddListener(LearnSkill);
             _forgetAllSkillsButton.onClick.AddListener(ForgetAllSkills);
@@ -50,8 +53,7 @@ namespace Skills.UI
 
         private void UpdateUI()
         {
-            _forgetAllSkillsButton.interactable =
-                ReferenceProvider.GetWithGeneration<SkillsService>().IsAnySkillLearned();
+            _forgetAllSkillsButton.interactable = _skillService.Reference.IsAnySkillLearned();
             if (_currentNode == null)
             {
                 _learnSkillButton.interactable = false;
@@ -65,6 +67,6 @@ namespace Skills.UI
 
         private void LearnSkill() => _currentNode.TryLearnSkill();
         private void ForgetSkill() => _currentNode.ForgetSkill();
-        private void ForgetAllSkills() => ReferenceProvider.GetWithGeneration<SkillsService>().ForgetAllSkills();
+        private void ForgetAllSkills() => _skillService.Reference.ForgetAllSkills();
     }
 }

@@ -11,6 +11,8 @@ namespace Skills
         private const string FilePath = "Skills";
 
         private SkillTreeNode _baseNote;
+
+        private ServiceReference<SimpleGameService> _gameService;
         
         public SkillsModel()
         {
@@ -66,7 +68,8 @@ namespace Skills
             }
 
             _baseNote = SkillTreeNode.InitSkillInfo(baseSkill);
-            ReferenceProvider.GetWithGeneration<SimpleGameService>().HandleDataLoaded(_baseNote);
+            
+            _gameService.Reference.HandleDataLoaded(_baseNote);
         }
     }
 
@@ -80,6 +83,9 @@ namespace Skills
         public string SkillID => _data.SkillID;
         public int Price => _data.Price;
         public bool IsBase => _data.IsBase;
+
+        private ServiceReference<PointsService> _pointService;
+        private ServiceReference<SkillsService> _skillService;
 
         private SkillTreeNode(SkillData data) => _data = data;
 
@@ -104,7 +110,7 @@ namespace Skills
 
         public bool TryLearnSkill()
         {
-            if (ReferenceProvider.GetWithGeneration<PointsService>().IsEnoughPoint(Price))
+            if (_pointService.Reference.IsEnoughPoint(Price))
             {
                 ValidateState(SkillState.Unlearned);
                 SetState(SkillState.Learned);
@@ -176,12 +182,12 @@ namespace Skills
             {
                 if (newState == SkillState.Learned)
                 {
-                    ReferenceProvider.GetWithGeneration<PointsService>().SpendPoints(_data.Price);
+                    _pointService.Reference.SpendPoints(_data.Price);
                 }
 
                 if (State == SkillState.Learned)
                 {
-                    ReferenceProvider.GetWithGeneration<PointsService>().ReturnPoints(_data.Price);
+                    _pointService.Reference.ReturnPoints(_data.Price);
                 }
                 
                 State = newState;
@@ -190,7 +196,7 @@ namespace Skills
                     subNode.OnParentStateChanged();
                 }
 
-                ReferenceProvider.GetWithGeneration<SkillsService>().HandleSkillChanged(this);
+               _skillService.Reference.HandleSkillChanged(this);
             }
         }
 
