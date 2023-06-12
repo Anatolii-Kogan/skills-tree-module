@@ -54,15 +54,8 @@ namespace Skills.UI
         private void UpdateUI()
         {
             _forgetAllSkillsButton.interactable = _skillService.Reference.IsAnySkillLearned();
-            if (_currentNode == null)
-            {
-                _learnSkillButton.interactable = false;
-                _forgetSkillButton.interactable = false;
-                return;
-            }
-
-            _learnSkillButton.interactable = _currentNode.State == SkillState.Unlearned;
-            _forgetSkillButton.interactable = _currentNode.State == SkillState.Learned;
+            _learnSkillButton.interactable = _currentNode != null &&  _currentNode.State == SkillState.Unlearned;
+            _forgetSkillButton.interactable = _currentNode != null && _currentNode.State == SkillState.Learned;
         }
 
         private void LearnSkill() => _currentNode.TryLearnSkill();

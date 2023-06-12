@@ -76,10 +76,7 @@ namespace Skills.UI
         private void HandleClick()
         {
             _skillInfo.Reference.SetInfo(_skillNode);
-            if (_skillNode.State != SkillState.CantBeLearned)
-            {
-                _skillsWindow.Reference.SetSkill(_skillNode);
-            }
+            _skillsWindow.Reference.SetSkill(_skillNode);
         }
 
         private void UpdateState()
