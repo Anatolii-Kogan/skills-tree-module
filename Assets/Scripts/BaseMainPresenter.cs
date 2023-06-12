@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Skills.Core
 {
-    public class BaseMainPresenter : MonoBehaviour
+    public abstract class BaseMainPresenter : MonoBehaviour
     {
         private void Awake()
         {

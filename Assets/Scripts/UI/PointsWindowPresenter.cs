@@ -18,13 +18,14 @@ namespace Skills.UI
             base.InitInternal();
             _pointsService.Reference.OnAmountChanged += UpdatePointsInfo;
             
-            _addPoint.onClick.AddListener(() => AddPoints(1));
-            _add10Points.onClick.AddListener(() => AddPoints(10));
+            _addPoint.onClick.AddListener(AddPoint);
+            _add10Points.onClick.AddListener(Add10Points);
 
             UpdatePointsInfo(0, 0);
         }
 
-        private void AddPoints(int points) => _pointsService.Reference.AddPoints(points);
+        private void AddPoint() => _pointsService.Reference.AddPoints(1);
+        private void Add10Points() => _pointsService.Reference.AddPoints(10);
 
         private void UpdatePointsInfo(int points, int totalPoints) => _pointDisplayer.text = $"{points}/{totalPoints}";
     }
