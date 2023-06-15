@@ -121,6 +121,24 @@ namespace Skills
             ValidateState(SkillState.Learned);
             SetState(SkillState.Unlearned);
         }
+        
+        public bool CanBeForget()
+        {
+            if (State != SkillState.Learned)
+            {
+                return false;
+            }
+            
+            foreach (var subNode in _subNodes)
+            {
+                if (subNode.State == SkillState.Learned)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         public bool TryGetSubNoteByIndex(int index, out SkillTreeNode subNote)
         {
