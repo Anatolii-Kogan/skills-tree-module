@@ -131,7 +131,7 @@ namespace Skills
             
             foreach (var subNode in _subNodes)
             {
-                if (subNode.State == SkillState.Learned)
+                if (subNode.State == SkillState.Learned && !subNode.IsAnyParentNodeLearned(this))
                 {
                     return false;
                 }
@@ -200,6 +200,19 @@ namespace Skills
 
                 _skillService.Reference.HandleSkillChanged(this);
             }
+        }
+
+        private bool IsAnyParentNodeLearned(SkillTreeNode exception = null)
+        {
+            foreach (var parentNode in _parentNodes)
+            {
+                if (parentNode.State == SkillState.Learned && parentNode != exception)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void ValidateState(SkillState state)
