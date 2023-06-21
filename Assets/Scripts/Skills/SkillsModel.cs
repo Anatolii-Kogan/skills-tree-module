@@ -69,7 +69,7 @@ namespace Skills
                 throw new NullReferenceException("There is no base skill data!");
             }
 
-            _baseNote = SkillTreeNode.InitSkillInfo(baseSkill);
+            _baseNote = SkillTreeNode.InitSkillInfo(baseSkill, capacity: skills.Length);
 
             return _baseNote;
         }
@@ -80,21 +80,42 @@ namespace Skills
         private readonly SkillData _data;
         private SkillTreeNode[] _parentNodes = Array.Empty<SkillTreeNode>();
         private SkillTreeNode[] _subNodes = Array.Empty<SkillTreeNode>();
+        
+        private ServiceReference<PointsService> _pointService;
+        private ServiceReference<SkillsService> _skillService; 
 
         public SkillState State { get; private set; } = SkillState.CantBeLearned;
         public string SkillID => _data.SkillID;
         public int Price => _data.Price;
         public bool IsBase => _data.IsBase;
 
-        private ServiceReference<PointsService> _pointService;
-        private ServiceReference<SkillsService> _skillService;
+        public bool CanBeForget
+        {
+            get
+            {
+                if (State != SkillState.Learned)
+                {
+                    return false;
+                }
+
+                foreach (var subNode in _subNodes)
+                {
+                    if (subNode.State == SkillState.Learned && !subNode.IsAnyParentNodeLearned(this))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
 
         private SkillTreeNode(SkillData data) => _data = data;
 
         /// <returns>base note</returns>
-        public static SkillTreeNode InitSkillInfo(SkillData baseSkill)
+        public static SkillTreeNode InitSkillInfo(SkillData baseSkill, int capacity = 0)
         {
-            Dictionary<SkillData, SkillTreeNode> skillNodes = new Dictionary<SkillData, SkillTreeNode>();
+            Dictionary<SkillData, SkillTreeNode> skillNodes = new Dictionary<SkillData, SkillTreeNode>(capacity);
 
             SkillTreeNode baseNode = new SkillTreeNode(baseSkill);
             skillNodes.Add(baseSkill, baseNode);
@@ -120,24 +141,6 @@ namespace Skills
         {
             ValidateState(SkillState.Learned);
             SetState(SkillState.Unlearned);
-        }
-        
-        public bool CanBeForget()
-        {
-            if (State != SkillState.Learned)
-            {
-                return false;
-            }
-            
-            foreach (var subNode in _subNodes)
-            {
-                if (subNode.State == SkillState.Learned && !subNode.IsAnyParentNodeLearned(this))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         public bool TryGetSubNoteByIndex(int index, out SkillTreeNode subNote)

@@ -54,7 +54,7 @@ namespace Skills.UI
             _forgetAllSkillsButton.interactable = _skillsService.Reference.IsAnySkillLearned();
             
             _learnSkillButton.interactable = _currentNode != null &&  _currentNode.State == SkillState.Unlearned && _pointsService.Reference.IsEnoughPoint(_currentNode.Price);
-            _forgetSkillButton.interactable = _currentNode != null && _currentNode.CanBeForget();
+            _forgetSkillButton.interactable = _currentNode != null && _currentNode.CanBeForget;
         }
 
         private void HandlePointsAmountChanged(int points, int totalPoints) => UpdateUI();
